@@ -6,35 +6,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const secret = process.env.JWT_SECRET;
-const authorModel_1 = require("../model/authorModel");
+const user_1 = require("../model/user");
 async function auth(req, res, next) {
     try {
         const authorization = req.headers.authorization;
-        if (!authorization && !req.cookie.token) {
-            res.status(401).json({
-                Error: 'Kindly sign in as a user'
-            });
+        const cookie = req.cookies.token;
+        if (!authorization && !cookie) {
+            res.redirect("/author/login");
         }
-        const token = authorization?.slice(7, authorization.length) || req.cookie.token;
+        const token = authorization?.slice(7, authorization.length) || cookie;
         let verified = jsonwebtoken_1.default.verify(token, secret);
         if (!verified) {
             return res.status(401).json({
-                Error: 'User not verified, you cant access this route'
+                Error: "User not verified, you cant access this route",
             });
         }
         const { id } = verified;
-        const user = await authorModel_1.AuthorsInstance.findOne({ where: { id } });
+        const user = await user_1.AuthorInstance.findOne({ where: { id } });
         if (!user) {
             return res.status(404).json({
-                Error: 'User not verified'
+                Error: "User not verified",
             });
         }
         req.user = verified;
         next();
     }
     catch (error) {
+        console.log(error);
         res.status(403).json({
-            Error: 'User not logged in'
+            Error: "User not logged in",
         });
     }
 }

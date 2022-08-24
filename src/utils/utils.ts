@@ -2,23 +2,23 @@ import Joi from 'joi'
 import jwt from 'jsonwebtoken'
 import { isJSDocImplementsTag } from 'typescript';
 
-export const createBooksSchema = Joi.object().keys({
+export const createBookSchema = Joi.object().keys({
     title: Joi.string().lowercase().required(),
     datePublished: Joi.string().lowercase().required(),
     description: Joi.string().lowercase().required(),
     pageCount: Joi.string().lowercase().required(),
     genre: Joi.string().lowercase().required(),
-    authorId: Joi.string().lowercase().required(),
+    // authorId: Joi.string().lowercase().required(),
     publisher: Joi.string().lowercase().required(),
 });
 
-export const updateBooksSchema = Joi.object().keys({
+export const updateBookSchema = Joi.object().keys({
     title:Joi.string().lowercase(),
     completed:Joi.string().lowercase(),
     description: Joi.string().lowercase().required(),
     pageCount: Joi.string().lowercase().required(),
     genre: Joi.string().lowercase().required(),
-    authorId: Joi.string().lowercase().required(),
+    // authorId: Joi.string().lowercase().required(),
     publisher: Joi.string().lowercase().required(), 
 });
 
@@ -29,7 +29,8 @@ export const registerSchema = Joi.object().keys({
     phoneNumber:Joi.string().length(11).pattern(/^[0-9]+$/).required(),
     password:Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
     confirm_password:Joi.ref("password")
-}).with('password', 'confirm_password')
+}).with('password', 'confirm_password').messages({
+    'message': `confirm password should be same as password`})
 
 export const loginSchema = Joi.object().keys({
     email:Joi.string().trim().lowercase().required(),
