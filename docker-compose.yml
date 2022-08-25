@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  booksapp:
+    build: .
+    container_name: brainybosslibrary
+    ports:
+      - "4000:3011"
+    volumes:
+      - ./:app
+      - ./app/node_modules
